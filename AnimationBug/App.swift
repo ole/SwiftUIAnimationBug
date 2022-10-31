@@ -9,7 +9,7 @@ struct AnimationBugApp: App {
     }
 }
 
-struct FavoriteNumber: Identifiable {
+struct FavoriteNumber: Identifiable, Equatable {
     var id: Int
     var value: Int
 }
@@ -17,7 +17,6 @@ struct FavoriteNumber: Identifiable {
 struct ContentView: View {
     @State private var favNumbers: [FavoriteNumber] = [
         .init(id: 1, value: 23),
-        .init(id: 2, value: 42),
     ]
 
     var body: some View {
@@ -45,44 +44,21 @@ struct ContentView: View {
     }
 }
 
-enum AnimationStyle {
-    case withAnimation
-    case animationModifier
-}
-
 struct Detail: View {
     @Binding var favNumber: FavoriteNumber
-    @State private var animationStyle: AnimationStyle = .withAnimation
 
     var body: some View {
         let isEven = favNumber.value.isMultiple(of: 2)
         VStack(spacing: 20) {
             VStack(alignment: .leading) {
-                LabeledContent {
-                    Picker("Animation style", selection: $animationStyle) {
-                        Text(".withAnimation")
-                            .tag(AnimationStyle.withAnimation)
-                        Text(".animation")
-                            .tag(AnimationStyle.animationModifier)
-                    }
-                    .pickerStyle(.menu)
-                } label: {
-                    Text("Animation style")
-                }
-
-                Text("Choose an animation style and tap the button. Observe how the animation breaks when you select `.withAnimation`, but works fine with `.animation`.\n\nThe problem seems to be the way the parent view creates the Binding for this view in `.navigationDestination(for:)`.")
+                Text("Tap the button. Observe that the animation doesn't work. Why?\n\nIf you replace the `.withAnimation` call in the Button action with `.animation(.default, favNumber)`, the animation works fine.\n\nThe problem seems to be the way the parent view creates the Binding for this view in `.navigationDestination(for:)`.")
                     .font(.footnote)
             }
             .multilineTextAlignment(.leading)
 
             Button("Tap me to animate!") {
-                switch animationStyle {
-                case .withAnimation:
-                    // FIXME: This animation doesn’t work. Why?
-                    withAnimation(.default) {
-                        favNumber.value += 1
-                    }
-                case .animationModifier:
+                // FIXME: This animation doesn’t work. Why?
+                withAnimation(.default) {
                     favNumber.value += 1
                 }
             }
@@ -98,12 +74,9 @@ struct Detail: View {
                 }
                 .navigationTitle("Item \(favNumber.id)")
                 .frame(maxHeight: .infinity)
+                // Animating with `.animation` works fine.
+//                .animation(.default, value: favNumber)
         }
-        // This animation works fine (as expected).
-        .animation(
-            animationStyle == .animationModifier ? .default : nil,
-            value: favNumber.value
-        )
         .padding()
     }
 }
