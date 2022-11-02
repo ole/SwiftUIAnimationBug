@@ -51,7 +51,7 @@ struct Detail: View {
         let isEven = favNumber.value.isMultiple(of: 2)
         VStack(spacing: 20) {
             VStack(alignment: .leading) {
-                Text("Tap the button. Observe that the animation doesn't work. Why?\n\nIf you replace the `.withAnimation` call in the Button action with `.animation(.default, favNumber)`, the animation works fine.\n\nThe problem seems to be the way the parent view creates the Binding for this view in `.navigationDestination(for:)`.")
+                Text("Tap the button. Observe that the animation doesn't work. Why?\n\nIf you replace the `.withAnimation` call in the Button action with `.animation(.default, favNumber)`, the animation works fine.\n\nThe problem seems to be the way the parent view creates the Binding for this view in `.navigationDestination(for:)`. When used outside a navigation view, the animation works fine.")
                     .font(.footnote)
             }
             .multilineTextAlignment(.leading)
@@ -84,5 +84,16 @@ struct Detail: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+struct DetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        // The animation works when you use the Detail view outside a navigation
+        // view, which makes me think the problem is the way we create the Binding
+        // in navigationDestination(for:).
+        WithState(FavoriteNumber(id: 1, value: 23)) { $num in
+            Detail(favNumber: $num)
+        }
     }
 }

@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D2A863F291306BC0073221C /* WithState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2A863E291306BC0073221C /* WithState.swift */; };
 		5D98321F290C0E2A0001F47D /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D98321E290C0E2A0001F47D /* App.swift */; };
 		5D983223290C0E2B0001F47D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D983222290C0E2B0001F47D /* Assets.xcassets */; };
 		5D983227290C0E2B0001F47D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D983226290C0E2B0001F47D /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5D2A863E291306BC0073221C /* WithState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithState.swift; sourceTree = "<group>"; };
 		5D98321B290C0E2A0001F47D /* AnimationBug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnimationBug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D98321E290C0E2A0001F47D /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		5D983222290C0E2B0001F47D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -51,6 +53,7 @@
 			isa = PBXGroup;
 			children = (
 				5D98321E290C0E2A0001F47D /* App.swift */,
+				5D2A863E291306BC0073221C /* WithState.swift */,
 				5D983222290C0E2B0001F47D /* Assets.xcassets */,
 				5D983224290C0E2B0001F47D /* AnimationBug.entitlements */,
 				5D983225290C0E2B0001F47D /* Preview Content */,
@@ -137,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D98321F290C0E2A0001F47D /* App.swift in Sources */,
+				5D2A863F291306BC0073221C /* WithState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
