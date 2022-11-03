@@ -1,3 +1,4 @@
+import IdentifiedCollections
 import SwiftUI
 
 @main
@@ -15,7 +16,7 @@ struct FavoriteNumber: Identifiable, Equatable {
 }
 
 struct ContentView: View {
-    @State private var favNumbers: [FavoriteNumber] = [
+    @State private var favNumbers: IdentifiedArrayOf<FavoriteNumber> = [
         .init(id: 1, value: 23),
     ]
 
@@ -37,8 +38,11 @@ struct ContentView: View {
             .navigationDestination(for: FavoriteNumber.ID.self) { id in
                 // Detail view requires a Binding.
                 // Given an item ID, derive a Binding to an array element.
-                let index = favNumbers.firstIndex(where: { $0.id == id })!
-                Detail(favNumber: $favNumbers[index])
+                let binding = Binding(
+                    get: { favNumbers[id: id]! },
+                    set: { favNumbers[id: id] = $0 }
+                )
+                Detail(favNumber: binding)
             }
         }
     }
