@@ -46,38 +46,55 @@ struct ContentView: View {
 
 struct Detail: View {
     @Binding var favNumber: FavoriteNumber
+    @State private var favNumberCopy: FavoriteNumber?
 
     var body: some View {
-        let isEven = favNumber.value.isMultiple(of: 2)
-        VStack(spacing: 20) {
-            VStack(alignment: .leading) {
-                Text("Tap the button. Observe that the animation doesn't work. Why?\n\nIf you replace the `.withAnimation` call in the Button action with `.animation(.default, favNumber)`, the animation works fine.\n\nThe problem seems to be the way the parent view creates the Binding for this view in `.navigationDestination(for:)`. When used outside a navigation view, the animation works fine.")
-                    .font(.footnote)
-            }
-            .multilineTextAlignment(.leading)
+        VStack {
+            if let num = favNumberCopy {
+                let isEven = num.value.isMultiple(of: 2)
+                VStack(spacing: 20) {
+                    VStack(alignment: .leading) {
+                        Text("Tap the button. Observe that the animation doesn't work. Why?\n\nIf you replace the `.withAnimation` call in the Button action with `.animation(.default, favNumber)`, the animation works fine.\n\nThe problem seems to be the way the parent view creates the Binding for this view in `.navigationDestination(for:)`. When used outside a navigation view, the animation works fine.")
+                            .font(.footnote)
+                    }
+                    .multilineTextAlignment(.leading)
 
-            Button("Tap me to animate!") {
-                // FIXME: This animation doesn’t work. Why?
-                withAnimation(.default) {
-                    favNumber.value += 1
-                }
-            }
-            .font(.title3)
-            .buttonStyle(.borderedProminent)
+                    Button("Tap me to animate!") {
+                        // FIXME: This animation doesn’t work. Why?
+                        withAnimation(.default) {
+                            favNumberCopy!.value += 1
+                        }
+                    }
+                    .font(.title3)
+                    .buttonStyle(.borderedProminent)
 
-            Text("\(favNumber.value)")
-                .font(.largeTitle.bold().monospacedDigit())
-                .padding(isEven ? 50 : 25)
-                .background {
-                    Rectangle()
-                        .fill(isEven ? Color.pink : .yellow)
+                    Text("\(num.value)")
+                        .font(.largeTitle.bold().monospacedDigit())
+                        .padding(isEven ? 50 : 25)
+                        .background {
+                            Rectangle()
+                                .fill(isEven ? Color.pink : .yellow)
+                        }
+                        .navigationTitle("Item \(num.id)")
+                        .frame(maxHeight: .infinity)
+                        // Animating with `.animation` works fine.
+        //                .animation(.default, value: favNumber)
                 }
-                .navigationTitle("Item \(favNumber.id)")
-                .frame(maxHeight: .infinity)
-                // Animating with `.animation` works fine.
-//                .animation(.default, value: favNumber)
+                .padding()
+            }
         }
-        .padding()
+        .onAppear {
+            favNumberCopy = favNumber
+        }
+        .onChange(of: favNumberCopy) { [prev = favNumberCopy] newValue in
+            guard prev != nil else {
+                // Ignore initial assignment from .onAppear
+                return
+            }
+            DispatchQueue.main.async {
+                favNumber = favNumberCopy!
+            }
+        }
     }
 }
 
