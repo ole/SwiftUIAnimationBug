@@ -40,13 +40,19 @@ struct ContentView: View {
                 // Given an item ID, derive a Binding to an array element.
                 let index = favNumbers.firstIndex(where: { $0.id == id })!
                 Detail(favNumber: $favNumbers[index])
+                    .equatable()
             }
         }
     }
 }
 
-struct Detail: View {
+struct Detail: View, Equatable {
     @Binding var favNumber: FavoriteNumber
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        print(#function)
+        return lhs.favNumber == rhs.favNumber
+    }
 
     var body: some View {
         let _ = Self._printChanges()
