@@ -20,6 +20,7 @@ struct ContentView: View {
     ]
 
     var body: some View {
+        let _ = Self._printChanges()
         NavigationStack {
             List {
                 Section {
@@ -48,6 +49,7 @@ struct Detail: View {
     @Binding var favNumber: FavoriteNumber
 
     var body: some View {
+        let _ = Self._printChanges()
         let isEven = favNumber.value.isMultiple(of: 2)
         VStack(spacing: 20) {
             VStack(alignment: .leading) {
