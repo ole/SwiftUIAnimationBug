@@ -36,12 +36,26 @@ struct ContentView: View {
             }
             .navigationTitle("Root")
             .navigationDestination(for: FavoriteNumber.ID.self) { id in
-                // Detail view requires a Binding.
-                // Given an item ID, derive a Binding to an array element.
-                let index = favNumbers.firstIndex(where: { $0.id == id })!
-                Detail(favNumber: $favNumbers[index])
+                DetailWrapper(id: id, favNumbers: $favNumbers)
             }
         }
+    }
+}
+
+/// Workaround for otherwise broken `withAnimation` in Detail view.
+///
+/// Injecting this wrapper view in the middle, and thus not creating the Binding
+/// directly inside `navigationDestination(for:)`, fixes the animation in Detail
+/// view.
+struct DetailWrapper: View {
+    var id: FavoriteNumber.ID
+    @Binding var favNumbers: [FavoriteNumber]
+
+    var body: some View {
+        // Detail view requires a Binding.
+        // Given an item ID, derive a Binding to an array element.
+        let index = favNumbers.firstIndex(where: { $0.id == id })!
+        Detail(favNumber: $favNumbers[index])
     }
 }
 
@@ -53,13 +67,12 @@ struct Detail: View {
         let isEven = favNumber.value.isMultiple(of: 2)
         VStack(spacing: 20) {
             VStack(alignment: .leading) {
-                Text("Tap the button. Observe that the animation doesn't work. Why?\n\nIf you replace the `.withAnimation` call in the Button action with `.animation(.default, favNumber)`, the animation works fine.\n\nThe problem seems to be the way the parent view creates the Binding for this view in `.navigationDestination(for:)`. When used outside a navigation view, the animation works fine.")
+                Text("Tap the button. Observe that the animation now works correctly, after we added the workaround.")
                     .font(.footnote)
             }
             .multilineTextAlignment(.leading)
 
             Button("Tap me to animate!") {
-                // FIXME: This animation doesn’t work. Why?
                 withAnimation(.default) {
                     favNumber.value += 1
                 }
